@@ -8,7 +8,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Text;
 
-namespace NCFAzureDurableFunctions.Src.Services.Helpers
+namespace NCFAzureDurableFunctions.Src.Middleware
 {
     public class AuthenticationMiddleware : IFunctionsWorkerMiddleware
     {

@@ -1,18 +1,24 @@
 ﻿using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Middleware;
 using Microsoft.Azure.Functions.Worker.Extensions.DurableTask;
+using Microsoft.Azure.Functions.Worker.Middleware;
+using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NCFAzureDurableFunctions.src.Middleware;
+using NCFAzureDurableFunctions.Src.Middleware;
 using NCFAzureDurableFunctions.Src.Services.Helpers;
-using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 
 var host = new HostBuilder()
     .ConfigureFunctionsWebApplication(worker =>
     {
         // Register custom middleware
         worker.UseMiddleware<AuthenticationMiddleware>();
+
+        // ✅ Register Logging Middleware globally
+        worker.UseMiddleware<LoggingMiddleware>();
+
     })
     .ConfigureAppConfiguration((context, config) =>
     {
