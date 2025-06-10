@@ -1,15 +1,15 @@
 ﻿using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
+using Microsoft.Azure.Functions.Worker.Extensions.DurableTask;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NCFAzureDurableFunctions.Src.Services.Helpers;
-using Microsoft.DurableTask.SqlServer.AzureFunctions;
-using Microsoft.DurableTask.SqlServer;
+using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 
 var host = new HostBuilder()
-    .ConfigureFunctionsWorkerDefaults(worker =>
+    .ConfigureFunctionsWebApplication(worker =>
     {
         // Register custom middleware
         worker.UseMiddleware<AuthenticationMiddleware>();
@@ -24,7 +24,7 @@ var host = new HostBuilder()
         var configuration = context.Configuration;
 
         // ✅ Register helpers and services
-        services.AddSingleton<JwtHelper>(provider =>
+        services.AddScoped<JwtHelper>(provider =>
         {
             return new JwtHelper(
                 configuration["Jwt:Issuer"],
@@ -33,15 +33,20 @@ var host = new HostBuilder()
             );
         });
 
-        services.AddSingleton<EncryptionHelper>(provider =>
+        services.AddScoped<EncryptionHelper>(provider =>
         {
             return new EncryptionHelper(configuration["EncryptionKey"]);
         });
 
-        // ✅ Register Durable Functions with MSSQL storage provider
-        services.AddDurableTaskSqlServer(options =>
+        // ✅ Register Durable Functions using Azure Storage (instead of SQL Server)
+        services.Configure<DurableTaskOptions>(options =>
         {
-            options.ConnectionString = configuration.GetConnectionString("DefaultConnection");
+            // Replace 'AzureStorageDurabilityProvider' with a valid accessible type or configuration
+            options.StorageProvider = new Dictionary<string, object>
+            {
+                { "TaskHubName", configuration["DurableTask:HubName"] }, // ✅ Ensure hub name is set
+                { "ConnectionString", configuration.GetConnectionString("AzureStorageConnection") }
+            };
         });
 
         // ✅ Ensure logging services are registered

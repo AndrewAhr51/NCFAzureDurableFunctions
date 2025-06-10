@@ -13,10 +13,11 @@
     "durableTask": {
       "hubName": "NCFDurableFunctionsHub",
       "storageProvider": {
-        "type": "mssql",
-        "connectionStringName": "DefaultConnection", // ✅ Matches appsettings.json
-        "taskEventBatchSize": 20, // ✅ Optimizes batch processing
-        "taskEventLockTimeout": "00:01:00" // ✅ Prevents long-running locks
+        "type": "AzureStorage", 
+        "connectionStringName": "AzureStorageConnection", 
+        "partitionCount": 4, 
+        "controlQueueBatchSize": 10, 
+        "maxStorageRetries": 3 
       }
     }
   },

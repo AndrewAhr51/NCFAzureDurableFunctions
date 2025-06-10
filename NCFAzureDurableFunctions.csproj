@@ -1,38 +1,65 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
     <OutputType>Exe</OutputType>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <DisableWorkerExtensions>true</DisableWorkerExtensions>
   </PropertyGroup>
+
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <!-- ✅ Azure Functions In-Process SDK -->
+    <PackageReference Include="Dapper" Version="2.1.66" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.DurableTask" Version="3.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.5" />
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.6.0" />
+
+    <!-- ✅ Azure Functions Worker -->
     <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.DurableTask.SqlServer" Version="1.5.1" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.3.0" />
+
+    <!-- ✅ Durable Functions Support -->
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.DurableTask" Version="1.4.0" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http.AspNetCore" Version="2.0.2" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="2.0.4" />
+
+    <!-- ✅ Durable Functions with MSSQL (In-Process) -->
+    
+    <!-- ✅ SQL Server & EF Core -->
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
-    <PackageReference Include="Microsoft.DurableTask.SqlServer" Version="1.5.1" />
-    <PackageReference Include="Microsoft.DurableTask.SqlServer.AzureFunctions" Version="1.5.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.5" />
+
+    <!-- ✅ Identity & Security -->
     <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.12.0" />
-    <PackageReference Include="Microsoft.SqlServer.IntegrationServices.Build" Version="1.1.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.0" />
+
+    <!-- ✅ Logging & Middleware Dependencies -->
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.5" />
+    <!-- ✅ Match Logging with EF Core 9.0.5 -->
+
+    <!-- ✅ HTTP Extensions -->
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.3.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http.AspNetCore" Version="2.0.2" />
+
+    <!-- ✅ Miscellaneous -->
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
+
   <ItemGroup>
+    <!-- ✅ Ensure `appsettings.json` is copied -->
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
   </ItemGroup>
+
   <ItemGroup>
+    <!-- ✅ Using Alias for Execution Context -->
     <Using Include="System.Threading.ExecutionContext" Alias="ExecutionContext" />
   </ItemGroup>
+
   <ItemGroup>
+    <!-- ✅ Folder Structure -->
     <Folder Include="Deployment\" />
     <Folder Include="Docs\" />
     <Folder Include="Src\Data\Context\" />
@@ -43,4 +70,5 @@
     <Folder Include="Tests\IntegrationTests\" />
     <Folder Include="Tests\UnitTests\" />
   </ItemGroup>
+
 </Project>

@@ -6,20 +6,20 @@ using NCFAzureDurableFunctions.Src.Functions.Orchestrators;
 
 namespace NCFAzureDurableFunctions.Src.Functions.Triggers
 {
-    public static class StartSayHelloSaga
+    public static class StartNCFDonor
     {
-        [Function("SayHelloSagaFunction_HttpStart")]
+        [Function("NCFDonorFunction_HttpStart")]
         public static async Task<HttpResponseData> HttpStart(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req,
             [DurableClient] DurableTaskClient client,
             FunctionContext executionContext)
         {
-            ILogger logger = executionContext.GetLogger(nameof(StartSayHelloSaga));
+            ILogger logger = executionContext.GetLogger(nameof(StartNCFDonor));
 
             try
             {
                 string instanceId = await client.ScheduleNewOrchestrationInstanceAsync(
-                    nameof(SayHelloOrchestrator));
+                    nameof(NCFDonorOrchestrator));
 
                 logger.LogInformation("Started orchestration with ID = {instanceId}", instanceId);
                 return client.CreateCheckStatusResponse(req, instanceId);
